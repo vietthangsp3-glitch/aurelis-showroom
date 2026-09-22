@@ -34,8 +34,6 @@ export function LeadInlineForm() {
         <ShieldCheck size={22} aria-hidden="true" />
       </div>
 
-      <input type="hidden" name="interestType" value="QUOTE" />
-      <input type="hidden" name="preferredContactTime" value="ANYTIME" />
       <input type="hidden" name="source" value="homepage-cta" />
       <input type="hidden" name="submissionKey" value={submissionKey} />
       <input type="hidden" name="landingPage" value={landingPage} />
@@ -55,6 +53,30 @@ export function LeadInlineForm() {
         <label className="lead-inline-form__email">
           <span>Email</span>
           <input name="email" type="email" placeholder="you@example.com" autoComplete="email" />
+          {state.fieldErrors?.email?.[0] && <small className="field-error">{state.fieldErrors.email[0]}</small>}
+        </label>
+        <label>
+          <span>Nhu cầu *</span>
+          <select name="interestType" defaultValue="QUOTE">
+            <option value="QUOTE">Nhận báo giá</option>
+            <option value="TEST_DRIVE">Đăng ký lái thử</option>
+            <option value="FINANCE">Tư vấn trả góp</option>
+            <option value="CAR_SELECTION">Tư vấn chọn xe</option>
+            <option value="PROMOTION">Nhận ưu đãi</option>
+          </select>
+        </label>
+        <label>
+          <span>Thời gian liên hệ *</span>
+          <select name="preferredContactTime" defaultValue="ANYTIME">
+            <option value="ANYTIME">Bất kỳ thời gian nào</option>
+            <option value="MORNING">Buổi sáng</option>
+            <option value="AFTERNOON">Buổi chiều</option>
+            <option value="EVENING">Buổi tối</option>
+          </select>
+        </label>
+        <label className="lead-inline-form__note">
+          <span>Ghi chú</span>
+          <textarea name="note" rows={3} placeholder="Mẫu xe, ngân sách hoặc điều bạn cần tư vấn..." />
         </label>
       </div>
 
