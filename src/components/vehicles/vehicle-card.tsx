@@ -13,6 +13,14 @@ export function VehicleCard({ vehicle, light = false }: { vehicle: Vehicle; ligh
           alt={`${vehicle.brand} ${vehicle.model}`}
           fill
           sizes="(max-width: 760px) 88vw, (max-width: 1100px) 45vw, 25vw"
+          className="vehicle-card__media vehicle-card__media--primary"
+        />
+        <Image
+          src={vehicle.gallery[1] ?? vehicle.image}
+          alt=""
+          fill
+          sizes="(max-width: 760px) 88vw, (max-width: 1100px) 45vw, 25vw"
+          className="vehicle-card__media vehicle-card__media--secondary"
         />
         <button type="button" aria-label={`Yêu thích ${vehicle.model}`} className="vehicle-card__favorite">
           <Heart size={18} />

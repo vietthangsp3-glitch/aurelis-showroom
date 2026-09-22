@@ -4,6 +4,7 @@ import { ArrowRight, BadgePercent, ShieldCheck, Sparkles } from "lucide-react";
 import { BrandMarquee } from "@/components/home/brand-marquee";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
 import { LeadDialog } from "@/features/leads/components/lead-dialog";
+import { LeadInlineForm } from "@/features/leads/components/lead-inline-form";
 import { brands, vehicles } from "@/data/vehicles";
 
 const categories = [
@@ -115,7 +116,7 @@ export default function HomePage() {
       <section className="lead-strip">
         <div className="shell lead-strip__inner">
           <div><p className="eyebrow">Để chúng tôi tìm chiếc xe phù hợp cho bạn</p><h2>Bắt đầu hành trình<br />cùng AURELIA.</h2></div>
-          <LeadDialog label="Yêu cầu tư vấn" />
+          <LeadInlineForm />
         </div>
       </section>
     </>
