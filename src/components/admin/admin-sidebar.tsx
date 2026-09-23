@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Car, Gauge, LogOut, MessageSquareText, Tags } from "lucide-react";
+import { BarChart3, Car, Gauge, Gift, LogOut, MessageSquareText, Newspaper, Settings, Store, Tags, Users } from "lucide-react";
 import { BrandMark } from "@/components/shared/brand-mark";
 import { logout } from "@/features/auth/actions";
 import type { AppSession } from "@/lib/auth/session";
@@ -16,6 +16,12 @@ const items: readonly SidebarItem[] = [
   ["Quản lý xe", "/admin/cars", Car, ["ADMIN", "EDITOR"]],
   ["Thương hiệu", "/admin/brands", Tags, ["ADMIN", "EDITOR"]],
   ["Yêu cầu / Leads", "/admin/leads", MessageSquareText, ["ADMIN", "SALES"]],
+  ["Đặt lịch lái thử", "/admin/test-drives", Store, ["ADMIN", "SALES"]],
+  ["Ưu đãi", "/admin/promotions", Gift, ["ADMIN", "EDITOR"]],
+  ["Tin tức", "/admin/articles", Newspaper, ["ADMIN", "EDITOR"]],
+  ["Khách hàng", "/admin/customers", Users, ["ADMIN", "SALES"]],
+  ["Thống kê", "/admin/analytics", BarChart3, ["ADMIN", "SALES"]],
+  ["Cài đặt", "/admin/settings", Settings, ["ADMIN"]],
 ];
 
 export function AdminSidebar({ session }: { session: AppSession }) {
