@@ -28,7 +28,7 @@ export async function createBrandAction(formData: FormData) {
   let result: ["success" | "error", string] = ["success", "Đã thêm thương hiệu."];
   try {
     if (!name || !slug) throw new Error("Tên thương hiệu không hợp lệ.");
-    await prisma.brand.create({ data: { name, slug, description: text(formData, "description") || null } });
+    await prisma.brand.create({ data: { name, slug, logoUrl: text(formData, "logoUrl") || null, description: text(formData, "description") || null } });
   } catch (error) {
     result = ["error", error instanceof Error && error.message.includes("Unique") ? "Tên hoặc slug thương hiệu đã tồn tại." : "Không thể thêm thương hiệu."];
   }
@@ -42,7 +42,7 @@ export async function updateBrandAction(brandId: string, formData: FormData) {
   const slug = slugify(text(formData, "slug") || name);
   let result: ["success" | "error", string] = ["success", "Đã cập nhật thương hiệu."];
   try {
-    await prisma.brand.update({ where: { id: brandId }, data: { name, slug, description: text(formData, "description") || null } });
+    await prisma.brand.update({ where: { id: brandId }, data: { name, slug, logoUrl: text(formData, "logoUrl") || null, description: text(formData, "description") || null } });
   } catch {
     result = ["error", "Không thể cập nhật. Hãy kiểm tra tên và slug."];
   }

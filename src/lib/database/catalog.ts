@@ -7,6 +7,7 @@ export interface CatalogBrand {
   id?: string;
   name: string;
   slug: string;
+  logoUrl?: string | null;
 }
 
 export async function getCatalogBrands(): Promise<CatalogBrand[]> {
@@ -14,7 +15,7 @@ export async function getCatalogBrands(): Promise<CatalogBrand[]> {
   try {
     return await prisma.brand.findMany({
       where: { models: { some: { vehicles: { some: { status: "PUBLISHED" } } } } },
-      select: { id: true, name: true, slug: true },
+      select: { id: true, name: true, slug: true, logoUrl: true },
       orderBy: { name: "asc" },
     });
   } catch (error) {

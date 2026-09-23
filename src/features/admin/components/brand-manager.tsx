@@ -13,6 +13,7 @@ interface BrandRow {
   id: string;
   name: string;
   slug: string;
+  logoUrl: string | null;
   description: string | null;
   models: Array<{ id: string; name: string; slug: string; vehicleCount: number }>;
 }
@@ -25,6 +26,7 @@ export function BrandManager({ brands, canDelete }: { brands: BrandRow[]; canDel
         <form action={createBrandAction} className="brand-create-form">
           <label>Tên thương hiệu *<input name="name" required placeholder="Ví dụ: Porsche" /></label>
           <label>Slug<input name="slug" placeholder="Tự tạo nếu để trống" /></label>
+          <label>URL logo<input name="logoUrl" type="url" placeholder="https://.../logo.svg" /></label>
           <label>Mô tả<textarea name="description" rows={3} placeholder="Giới thiệu ngắn về thương hiệu" /></label>
           <button className="admin-button" type="submit"><Plus size={15} /> Thêm thương hiệu</button>
         </form>
@@ -42,6 +44,7 @@ export function BrandManager({ brands, canDelete }: { brands: BrandRow[]; canDel
             <form action={updateBrandAction.bind(null, brand.id)} className="brand-edit-form">
               <label>Tên<input name="name" required defaultValue={brand.name} /></label>
               <label>Slug<input name="slug" required defaultValue={brand.slug} /></label>
+              <label>URL logo<input name="logoUrl" type="url" defaultValue={brand.logoUrl ?? ""} placeholder="Để trống để dùng logo mặc định" /></label>
               <label className="brand-edit-form__description">Mô tả<textarea name="description" rows={2} defaultValue={brand.description ?? ""} /></label>
               <button className="admin-button admin-button--light" type="submit"><Save size={14} /> Lưu thay đổi</button>
             </form>
