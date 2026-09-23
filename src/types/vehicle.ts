@@ -37,6 +37,11 @@ export interface Vehicle {
   interior: string;
   technology: string;
   safety: string;
+  specifications: Record<string, string>;
+  overviewTitle?: string;
+  overviewQuote?: string;
+  brochureUrl?: string;
+  brandLogo?: string;
   image: string;
   gallery: string[];
   contentImages?: {

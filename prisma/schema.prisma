@@ -92,6 +92,10 @@ model Vehicle {
   interior    String
   technology  String
   safety      String
+  specifications Json?
+  overviewTitle String?
+  overviewQuote String?
+  brochureUrl String?
   seoTitle    String?
   seoDescription String?
   status      PublishStatus   @default(DRAFT)

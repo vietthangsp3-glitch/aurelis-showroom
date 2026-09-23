@@ -718,3 +718,109 @@ h2 { font-size: clamp(1.9rem, 3.2vw, 3.45rem); }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .brand-marquee__track { animation: none; }
 }
+
+/* Vehicle detail — editorial product layout */
+.vehicle-detail-page { padding-top: 84px; background: #f5f3ee; color: #11191b; }
+.detail-breadcrumb { display: flex; align-items: center; gap: 9px; min-height: 52px; color: #66706e; font-size: .68rem; }
+.detail-breadcrumb strong { color: #18201f; font-weight: 600; }
+.detail-product { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(340px, .95fr); gap: 28px; align-items: start; }
+.detail-product .detail-gallery { height: auto; grid-template-rows: minmax(430px, 32vw) 94px; }
+.detail-product .detail-gallery__main { overflow: hidden; min-height: 0; border-radius: 7px; background: #111; }
+.detail-product .detail-gallery__main > img { object-fit: cover; }
+.detail-gallery__arrow, .detail-gallery__expand { position: absolute; z-index: 3; display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid rgba(255,255,255,.3); border-radius: 50%; background: rgba(4,9,11,.72); color: white; }
+.detail-gallery__arrow { top: 50%; cursor: pointer; transform: translateY(-50%); }
+.detail-gallery__arrow--left { left: 16px; }
+.detail-gallery__arrow--right { right: 16px; }
+.detail-gallery__expand { top: 14px; right: 14px; }
+.detail-gallery__counter { position: absolute; z-index: 3; right: 14px; bottom: 12px; border-radius: 20px; background: rgba(4,9,11,.72); padding: 5px 11px; color: white; font-size: .64rem; }
+.detail-product .detail-gallery__thumbs { gap: 8px; padding: 9px 0 0; background: transparent; }
+.detail-product .detail-gallery__thumbs button { min-width: calc((100% - 32px) / 5); overflow: hidden; border-radius: 5px; background: #ddd; }
+.detail-product .detail-gallery__thumbs img { object-fit: cover; }
+.detail-product__info { display: flex; min-height: 100%; flex-direction: column; padding: 8px 0 0; }
+.detail-product__brand { display: flex; min-height: 54px; align-items: start; justify-content: space-between; gap: 20px; }
+.detail-product__brand p, .detail-kicker, .detail-section-title > p { margin: 0; color: #6f5730; font-size: .63rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+.detail-product__brand img { object-fit: contain; filter: grayscale(1) brightness(.22); }
+.detail-product__info h1 { margin: 2px 0 10px; font-size: clamp(2.25rem, 3.3vw, 3.55rem); line-height: 1.05; }
+.detail-product__description { margin: 0 0 18px; color: #5e6664; font-size: .82rem; }
+.detail-product__info > small { color: #4f5755; font-weight: 600; }
+.detail-product__price { margin: 0 0 18px; font-size: clamp(1.55rem, 2.3vw, 2.35rem); line-height: 1.2; }
+.detail-product__info > .button { width: 100%; background: #ead6b4; color: #11191b; }
+.detail-product__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.detail-product__actions .button { width: 100%; min-height: 46px; border-color: #16201f; background: #11191b; color: white; }
+.detail-product__trust { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 18px; border-top: 1px solid #d9d8d3; padding-top: 16px; }
+.detail-product__trust span { display: flex; align-items: center; gap: 7px; border-right: 1px solid #deddd8; padding: 0 10px; color: #4d5654; font-size: .6rem; }
+.detail-product__trust span:first-child { padding-left: 0; }
+.detail-product__trust span:last-child { border: 0; }
+.detail-product__trust svg { width: 18px; flex: none; }
+.detail-quick-specs { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); margin-top: 34px; overflow: hidden; border: 1px solid #d9dad6; border-radius: 7px; background: rgba(255,255,255,.35); }
+.detail-quick-specs > span { display: grid; min-width: 0; grid-template-columns: auto 1fr; column-gap: 9px; align-items: center; border-right: 1px solid #dedfda; padding: 17px 12px; }
+.detail-quick-specs > span:last-child { border: 0; }
+.detail-quick-specs svg { width: 20px; grid-row: span 2; }
+.detail-quick-specs small { overflow: hidden; color: #737b79; font-size: .56rem; text-overflow: ellipsis; white-space: nowrap; }
+.detail-quick-specs strong { overflow: hidden; font-size: .62rem; text-overflow: ellipsis; white-space: nowrap; }
+.technical-section, .highlights-section, .detail-related { padding-top: 34px; }
+.detail-section-title { display: flex; min-height: 34px; align-items: center; justify-content: space-between; }
+.detail-section-title a { display: inline-flex; align-items: center; gap: 6px; border-bottom: 1px solid currentColor; color: #73582e; font-size: .65rem; }
+.technical-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.technical-card { border: 1px solid #d9dad6; border-radius: 6px; background: rgba(255,255,255,.38); }
+.technical-card h3 { display: flex; align-items: center; gap: 11px; margin: 0; border-bottom: 1px solid #dddeda; padding: 15px; font-family: var(--font-sans); font-size: .72rem; text-transform: uppercase; }
+.technical-card dl { margin: 0; padding: 0 14px 12px; }
+.technical-card dl div { display: grid; grid-template-columns: 1.05fr .95fr; gap: 10px; border-bottom: 1px solid #e1e1dc; padding: 9px 0; font-size: .58rem; }
+.technical-card dl div:last-child { border: 0; }
+.technical-card dt { color: #727977; }
+.technical-card dd { margin: 0; color: #303836; }
+.detail-highlight-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.detail-highlight-grid article { position: relative; overflow: hidden; border: 1px solid #dcddd8; border-radius: 6px; background: rgba(255,255,255,.45); padding-bottom: 14px; }
+.detail-highlight-grid article > div { position: relative; aspect-ratio: 1.8; overflow: hidden; }
+.detail-highlight-grid article img { object-fit: cover; transition: transform 450ms ease; }
+.detail-highlight-grid article:hover img { transform: scale(1.04); }
+.detail-highlight-grid h3 { margin: 10px 14px 2px; font-size: 1rem; }
+.detail-highlight-grid p { display: -webkit-box; overflow: hidden; margin: 0 42px 0 14px; color: #646c6a; font-size: .64rem; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.detail-highlight-grid article > span { position: absolute; right: 14px; bottom: 14px; }
+.detail-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 54px; align-items: center; padding-top: 46px; }
+.detail-overview h2 { margin: 5px 0 12px; font-size: clamp(2.3rem, 3.4vw, 3.75rem); }
+.detail-overview p:not(.detail-kicker) { color: #555f5c; font-size: .78rem; }
+.detail-overview blockquote { margin: 18px 0; font-family: var(--font-display); font-size: 1.1rem; font-style: italic; }
+.detail-overview small { color: #747c79; }
+.detail-overview__image { position: relative; min-height: 330px; overflow: hidden; border-radius: 6px; }
+.detail-overview__image img { object-fit: cover; }
+.detail-overview__image span { position: absolute; z-index: 2; right: 16px; bottom: 12px; color: white; font-size: .62rem; }
+.detail-related { padding-bottom: 36px; }
+.detail-bottom-cta { padding: 28px 0; background: linear-gradient(90deg, rgba(5,10,12,.95), rgba(5,10,12,.7)), url("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=80") center/cover; color: white; }
+.detail-bottom-cta .shell { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+.detail-bottom-cta p { margin: 0; color: #d7b77a; font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; }
+.detail-bottom-cta h2 { margin: 0; font-size: 2rem; }
+.detail-bottom-cta span { color: #bec4c1; font-size: .68rem; }
+.detail-bottom-cta .shell > div:last-child { display: flex; gap: 10px; }
+
+@media (max-width: 1100px) {
+  .detail-product { grid-template-columns: 1.2fr .8fr; gap: 20px; }
+  .detail-product .detail-gallery { grid-template-rows: minmax(360px, 42vw) 82px; }
+  .detail-product__trust { grid-template-columns: 1fr; gap: 8px; }
+  .detail-product__trust span { border: 0; padding: 0; }
+  .detail-quick-specs { grid-template-columns: repeat(4, 1fr); }
+  .detail-quick-specs > span:nth-child(4) { border-right: 0; }
+  .detail-quick-specs > span:nth-child(-n+4) { border-bottom: 1px solid #dedfda; }
+  .technical-grid, .detail-highlight-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 760px) {
+  .vehicle-detail-page { padding-top: 72px; padding-bottom: 70px; }
+  .detail-breadcrumb { overflow: hidden; min-height: 44px; white-space: nowrap; }
+  .detail-product { grid-template-columns: 1fr; }
+  .detail-product .detail-gallery { grid-template-rows: 310px 76px; }
+  .detail-product .detail-gallery__thumbs button { min-width: 112px; }
+  .detail-product__info { padding-top: 12px; }
+  .detail-product__info h1 { font-size: 2.35rem; }
+  .detail-product__actions { grid-template-columns: 1fr; }
+  .detail-product__trust { grid-template-columns: repeat(3, 1fr); }
+  .detail-product__trust span { align-items: start; flex-direction: column; font-size: .55rem; }
+  .detail-quick-specs { grid-template-columns: repeat(2, 1fr); margin-top: 24px; }
+  .detail-quick-specs > span { border-bottom: 1px solid #dedfda !important; }
+  .detail-quick-specs > span:nth-child(even) { border-right: 0; }
+  .technical-grid, .detail-highlight-grid, .detail-overview { grid-template-columns: 1fr; }
+  .detail-overview { gap: 24px; }
+  .detail-overview__image { min-height: 270px; }
+  .detail-bottom-cta .shell { align-items: stretch; flex-direction: column; }
+  .detail-bottom-cta .shell > div:last-child { display: grid; grid-template-columns: 1fr 1fr; }
+}

@@ -106,6 +106,8 @@ function vehicleData(formData: FormData) {
     ["CONTENT_TECHNOLOGY", text(formData, "technologyImage")],
     ["CONTENT_SAFETY", text(formData, "safetyImage")],
   ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+  const specificationKeys = ["displacement", "maxSpeed", "consumption", "wheelbase", "groundClearance", "curbWeight", "luggageCapacity", "energyCapacity", "centerScreen", "audio", "climate", "seatMaterial", "sunroof", "wirelessCharging", "connectivity", "ambientLighting", "driverAssist", "cruiseControl", "laneWarning", "laneKeepAssist", "blindSpot", "emergencyBrake", "camera", "sensors", "airbags"];
+  const specifications = Object.fromEntries(specificationKeys.map((key) => [key, text(formData, key)]).filter(([, value]) => value));
   return {
     modelId: text(formData, "modelId"),
     slug: slugify(text(formData, "slug")),
@@ -119,6 +121,10 @@ function vehicleData(formData: FormData) {
     interior: text(formData, "interior"),
     technology: text(formData, "technology"),
     safety: text(formData, "safety"),
+    specifications,
+    overviewTitle: text(formData, "overviewTitle") || null,
+    overviewQuote: text(formData, "overviewQuote") || null,
+    brochureUrl: text(formData, "brochureUrl") || null,
     seoTitle: text(formData, "seoTitle") || null,
     seoDescription: text(formData, "seoDescription") || null,
     status,
@@ -169,7 +175,7 @@ export async function createVehicleAction(formData: FormData) {
         modelId: input.modelId, slug: input.slug, year: input.year, bodyType: input.bodyType,
         segment: input.segment, fuelType: input.fuelType, seats: input.seats,
         description: input.description, exterior: input.exterior, interior: input.interior,
-        technology: input.technology, safety: input.safety, seoTitle: input.seoTitle,
+        technology: input.technology, safety: input.safety, specifications: input.specifications, overviewTitle: input.overviewTitle, overviewQuote: input.overviewQuote, brochureUrl: input.brochureUrl, seoTitle: input.seoTitle,
         seoDescription: input.seoDescription, status: input.status, publishedAt: input.publishedAt,
         images: { create: input.images.map((image, position) => ({ url: image.url, alt: `${input.variant.name} - ảnh ${position + 1}`, kind: image.kind, position })) },
         variants: { create: { ...input.variant, inventory: input.inventory.showroomId ? { create: input.inventory } : undefined } },
@@ -198,7 +204,7 @@ export async function updateVehicleAction(vehicleId: string, formData: FormData)
           modelId: input.modelId, slug: input.slug, year: input.year, bodyType: input.bodyType,
           segment: input.segment, fuelType: input.fuelType, seats: input.seats,
           description: input.description, exterior: input.exterior, interior: input.interior,
-          technology: input.technology, safety: input.safety, seoTitle: input.seoTitle,
+          technology: input.technology, safety: input.safety, specifications: input.specifications, overviewTitle: input.overviewTitle, overviewQuote: input.overviewQuote, brochureUrl: input.brochureUrl, seoTitle: input.seoTitle,
           seoDescription: input.seoDescription, status: input.status, publishedAt: input.publishedAt,
         },
       });

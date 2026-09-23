@@ -2,6 +2,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { prisma } from "@/lib/database/prisma";
 import { brands as fallbackBrands, vehicles as fallbackVehicles } from "@/data/vehicles";
 import type { Vehicle } from "@/types/vehicle";
+import { defaultBrandLogos } from "@/lib/brand-logos";
 
 export interface CatalogBrand {
   id?: string;
@@ -50,10 +51,12 @@ export async function getCatalogVehicles(): Promise<Vehicle[]> {
       const normalizedGallery = gallery.length ? [...gallery] : [image];
       while (normalizedGallery.length < 3) normalizedGallery.push(image);
       const stock = variant?.inventory.reduce((total, item) => total + item.quantity, 0) ?? 0;
+      const specifications = record.specifications && typeof record.specifications === "object" && !Array.isArray(record.specifications) ? record.specifications as Record<string, string> : {};
       return {
         id: variant?.id ?? record.id,
         brand: record.model.brand.name,
         brandSlug: record.model.brand.slug,
+        brandLogo: record.model.brand.logoUrl ?? defaultBrandLogos[record.model.brand.slug],
         model: record.model.name,
         variant: variant?.name ?? record.model.name,
         slug: record.slug,
@@ -78,6 +81,10 @@ export async function getCatalogVehicles(): Promise<Vehicle[]> {
         interior: record.interior,
         technology: record.technology,
         safety: record.safety,
+        specifications,
+        overviewTitle: record.overviewTitle ?? undefined,
+        overviewQuote: record.overviewQuote ?? undefined,
+        brochureUrl: record.brochureUrl ?? undefined,
         image,
         gallery: normalizedGallery,
         contentImages: {

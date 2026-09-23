@@ -132,6 +132,7 @@ export const vehicles: Vehicle[] = brandSeeds
           "Màn hình trung tâm độ phân giải cao, kết nối không dây và hệ thống hỗ trợ lái chủ động.",
         safety:
           "Gói an toàn toàn diện với cảnh báo điểm mù, hỗ trợ giữ làn và phanh khẩn cấp tự động.",
+        specifications: {},
         image: images[index % images.length] ?? images[0]!,
         gallery: [
           images[index % images.length] ?? images[0]!,

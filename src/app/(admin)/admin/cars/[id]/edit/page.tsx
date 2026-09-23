@@ -24,6 +24,8 @@ export default async function EditCarPage({ params, searchParams }: { params: Pr
     year: vehicle.year, bodyType: vehicle.bodyType, segment: vehicle.segment, fuelType: vehicle.fuelType,
     seats: vehicle.seats, description: vehicle.description, exterior: vehicle.exterior, interior: vehicle.interior,
     technology: vehicle.technology, safety: vehicle.safety, price: Number(variant?.price ?? 0),
+    specifications: (vehicle.specifications && typeof vehicle.specifications === "object" && !Array.isArray(vehicle.specifications) ? vehicle.specifications : {}) as Record<string, string>,
+    overviewTitle: vehicle.overviewTitle ?? "", overviewQuote: vehicle.overviewQuote ?? "", brochureUrl: vehicle.brochureUrl ?? "",
     salePrice: variant?.salePrice ? Number(variant.salePrice) : null, engine: variant?.engine ?? "",
     horsepower: variant?.horsepower ?? 0, torque: variant?.torque ?? 0,
     acceleration: Number(variant?.acceleration ?? 0), transmission: variant?.transmission ?? "",
