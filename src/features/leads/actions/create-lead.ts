@@ -1,9 +1,9 @@
 "use server";
 
-import { createHash } from "node:crypto";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/database/prisma";
 import { leadSchema } from "@/features/leads/schemas/lead";
+import { digestIdentifier } from "@/lib/security/digest";
 
 export interface LeadActionState {
   ok: boolean;
@@ -23,7 +23,11 @@ export async function createLead(
   const requestHeaders = await headers();
   const origin = requestHeaders.get("origin");
   const host = requestHeaders.get("host");
-  if (origin && host && new URL(origin).host !== host) {
+  try {
+    if (origin && host && new URL(origin).host !== host) {
+      return { ok: false, message: "Nguồn gửi yêu cầu không hợp lệ." };
+    }
+  } catch {
     return { ok: false, message: "Nguồn gửi yêu cầu không hợp lệ." };
   }
 
@@ -40,19 +44,25 @@ export async function createLead(
     return { ok: false, message: "Hệ thống dữ liệu chưa được cấu hình." };
   }
 
-  const forwardedFor = requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const ipHash = createHash("sha256").update(forwardedFor).digest("hex");
-  const fingerprint = createHash("sha256")
-    .update(`${parsed.data.phone}:${parsed.data.carId ?? ""}:${parsed.data.interestType}`)
-    .digest("hex");
+  const forwardedFor =
+    requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const ipHash = digestIdentifier(forwardedFor);
+  const fingerprint = digestIdentifier(
+    `${parsed.data.phone}:${parsed.data.carId ?? ""}:${parsed.data.interestType}`,
+  );
   const now = new Date();
   const bucketKey = `lead:${ipHash}:${now.toISOString().slice(0, 13)}`;
 
   try {
     const result = await prisma.$transaction(async (tx) => {
+      await tx.rateLimitBucket.deleteMany({ where: { resetAt: { lt: now } } });
       const bucket = await tx.rateLimitBucket.upsert({
         where: { key: bucketKey },
-        create: { key: bucketKey, count: 1, resetAt: new Date(now.getTime() + 60 * 60 * 1000) },
+        create: {
+          key: bucketKey,
+          count: 1,
+          resetAt: new Date(now.getTime() + 60 * 60 * 1000),
+        },
         update: { count: { increment: 1 } },
       });
       if (bucket.count > 8) throw new Error("RATE_LIMIT");
@@ -65,6 +75,14 @@ export async function createLead(
         select: { id: true },
       });
       if (duplicate) return { duplicate: true };
+
+      if (parsed.data.carId) {
+        const variant = await tx.vehicleVariant.findFirst({
+          where: { id: parsed.data.carId, vehicle: { status: "PUBLISHED" } },
+          select: { id: true },
+        });
+        if (!variant) throw new Error("INVALID_REFERENCE");
+      }
 
       await tx.lead.create({
         data: {
@@ -94,7 +112,13 @@ export async function createLead(
     };
   } catch (error) {
     if (error instanceof Error && error.message === "RATE_LIMIT") {
-      return { ok: false, message: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau." };
+      return {
+        ok: false,
+        message: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau.",
+      };
+    }
+    if (error instanceof Error && error.message === "INVALID_REFERENCE") {
+      return { ok: false, message: "Mẫu xe đã chọn không còn khả dụng." };
     }
     if (error instanceof Error && error.message.includes("Unique constraint")) {
       return { ok: true, message: "Yêu cầu của bạn đã được ghi nhận." };

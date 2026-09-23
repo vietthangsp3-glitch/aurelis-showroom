@@ -74,10 +74,11 @@ Trên Windows, sao chép .env.example thủ công thành .env.local.
 
 - DATABASE_URL: Neon pooled connection string có hostname chứa -pooler, dùng cho runtime trên Vercel.
 - DIRECT_URL: Neon direct connection string không có -pooler, dùng cho migration và Prisma Studio.
-- SESSION_SECRET: chuỗi ngẫu nhiên tối thiểu 32 ký tự.
-- ADMIN_EMAIL: email đăng nhập admin.
-- ADMIN_PASSWORD_HASH: bcrypt hash dùng khi đăng nhập.
-- ADMIN_SEED_PASSWORD_HASH: bcrypt hash dùng khi tạo admin seed.
+- SESSION_SECRET: chuỗi ngẫu nhiên tối thiểu 32 ký tự, dùng ký và xác minh session.
+- IP_HASH_SECRET: secret độc lập tối thiểu 32 ký tự, dùng HMAC địa chỉ mạng và fingerprint chống spam.
+- ADMIN_SEED_PASSWORD_HASH: bcrypt hash được lưu cho tài khoản admin trong database khi chạy seed.
+- REQUIRE_ADMIN_MFA, ADMIN_TOTP_SECRET: bật và cấu hình TOTP cho tài khoản ADMIN trên production.
+- ALLOWED_MEDIA_HOSTS: danh sách hostname HTTPS bổ sung được phép dùng cho ảnh/brochure, phân tách bằng dấu phẩy.
 - NEXT_PUBLIC_SITE_URL: canonical production URL.
 - NEXT_PUBLIC_GA_ID, NEXT_PUBLIC_CLARITY_ID: analytics tùy chọn.
 - CLOUDINARY_*: media production.

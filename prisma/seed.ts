@@ -6,12 +6,19 @@ const prisma = new PrismaClient();
 async function main() {
   const passwordHash = process.env.ADMIN_SEED_PASSWORD_HASH;
   if (!passwordHash) {
-    throw new Error("ADMIN_SEED_PASSWORD_HASH là bắt buộc để seed tài khoản quản trị.");
+    throw new Error(
+      "ADMIN_SEED_PASSWORD_HASH là bắt buộc để seed tài khoản quản trị.",
+    );
   }
   const admin = await prisma.user.upsert({
     where: { email: "admin@aurelia.vn" },
-    update: {},
-    create: { name: "Quản trị AURELIA", email: "admin@aurelia.vn", passwordHash, role: "ADMIN" },
+    update: { passwordHash },
+    create: {
+      name: "Quản trị AURELIA",
+      email: "admin@aurelia.vn",
+      passwordHash,
+      role: "ADMIN",
+    },
   });
 
   const showroom = await prisma.showroom.upsert({
@@ -33,7 +40,9 @@ async function main() {
       update: { name: brandSeed.name },
       create: { name: brandSeed.name, slug: brandSeed.slug },
     });
-    for (const item of vehicles.filter((vehicle) => vehicle.brandSlug === brandSeed.slug)) {
+    for (const item of vehicles.filter(
+      (vehicle) => vehicle.brandSlug === brandSeed.slug,
+    )) {
       const model = await prisma.vehicleModel.upsert({
         where: { slug: item.slug },
         update: { name: item.model },
@@ -116,7 +125,14 @@ async function main() {
       where: { submissionKey },
       update: {},
       create: {
-        name: ["Nguyễn Minh Hoàng", "Trần Thị Mai", "Lê Quang Huy", "Phạm Thu Trang", "Hoàng Anh Tuấn", "Vũ Minh Anh"][index]!,
+        name: [
+          "Nguyễn Minh Hoàng",
+          "Trần Thị Mai",
+          "Lê Quang Huy",
+          "Phạm Thu Trang",
+          "Hoàng Anh Tuấn",
+          "Vũ Minh Anh",
+        ][index]!,
         phone: `09000000${String(index).padStart(2, "0")}`,
         email: `lead${index + 1}@example.com`,
         variantId: item.id,

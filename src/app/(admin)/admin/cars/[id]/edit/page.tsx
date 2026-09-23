@@ -1,41 +1,122 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { VehicleForm, type VehicleFormValue } from "@/features/admin/components/vehicle-form";
+import {
+  VehicleForm,
+  type VehicleFormValue,
+} from "@/features/admin/components/vehicle-form";
 import { prisma } from "@/lib/database/prisma";
 import { requireRole } from "@/lib/auth/session";
 
-export default async function EditCarPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ error?: string }> }) {
+export default async function EditCarPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ error?: string }>;
+}) {
   await requireRole(["ADMIN", "EDITOR"]);
   const { id } = await params;
   const [{ error }, brands, showrooms, vehicle] = await Promise.all([
     searchParams,
-    prisma.brand.findMany({ include: { models: { select: { id: true, name: true }, orderBy: { name: "asc" } } }, orderBy: { name: "asc" } }),
-    prisma.showroom.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
-    prisma.vehicle.findUnique({ where: { id }, include: { model: true, variants: { include: { inventory: true }, take: 1 }, images: { orderBy: { position: "asc" } } } }),
+    prisma.brand.findMany({
+      include: {
+        models: { select: { id: true, name: true }, orderBy: { name: "asc" } },
+      },
+      orderBy: { name: "asc" },
+    }),
+    prisma.showroom.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+    prisma.vehicle.findUnique({
+      where: { id },
+      include: {
+        model: true,
+        variants: { include: { inventory: true }, take: 1 },
+        images: { orderBy: { position: "asc" } },
+      },
+    }),
   ]);
   if (!vehicle) notFound();
   const variant = vehicle.variants[0];
   const inventory = variant?.inventory[0];
-  const gallery = vehicle.images.filter((image) => image.kind === "COVER" || image.kind === "GALLERY");
-  const contentImage = (kind: string) => vehicle.images.find((image) => image.kind === kind)?.url ?? "";
+  const gallery = vehicle.images.filter(
+    (image) => image.kind === "COVER" || image.kind === "GALLERY",
+  );
+  const contentImage = (kind: string) =>
+    vehicle.images.find((image) => image.kind === kind)?.url ?? "";
   const value: VehicleFormValue = {
-    id: vehicle.id, brandId: vehicle.model.brandId, modelId: vehicle.modelId,
-    variantName: variant?.name ?? "", sku: variant?.sku ?? "", slug: vehicle.slug,
-    year: vehicle.year, bodyType: vehicle.bodyType, segment: vehicle.segment, fuelType: vehicle.fuelType,
-    seats: vehicle.seats, description: vehicle.description, exterior: vehicle.exterior, interior: vehicle.interior,
-    technology: vehicle.technology, safety: vehicle.safety, price: Number(variant?.price ?? 0),
-    specifications: (vehicle.specifications && typeof vehicle.specifications === "object" && !Array.isArray(vehicle.specifications) ? vehicle.specifications : {}) as Record<string, string>,
-    overviewTitle: vehicle.overviewTitle ?? "", overviewQuote: vehicle.overviewQuote ?? "", brochureUrl: vehicle.brochureUrl ?? "",
-    salePrice: variant?.salePrice ? Number(variant.salePrice) : null, engine: variant?.engine ?? "",
-    horsepower: variant?.horsepower ?? 0, torque: variant?.torque ?? 0,
-    acceleration: Number(variant?.acceleration ?? 0), transmission: variant?.transmission ?? "",
-    drivetrain: variant?.drivetrain ?? "", dimensions: variant?.dimensions ?? "",
-    showroomId: inventory?.showroomId ?? "", color: inventory?.color ?? "", quantity: inventory?.quantity ?? 0,
-    inventoryStatus: inventory?.status ?? "AVAILABLE", coverImage: gallery.find((image) => image.kind === "COVER")?.url ?? gallery[0]?.url ?? "",
-    galleryImages: gallery.filter((image) => image.kind !== "COVER").map((image) => image.url).join("\n"),
-    exteriorImage: contentImage("CONTENT_EXTERIOR"), interiorImage: contentImage("CONTENT_INTERIOR"),
-    technologyImage: contentImage("CONTENT_TECHNOLOGY"), safetyImage: contentImage("CONTENT_SAFETY"),
-    seoTitle: vehicle.seoTitle ?? "", seoDescription: vehicle.seoDescription ?? "", status: vehicle.status,
+    id: vehicle.id,
+    variantId: variant?.id ?? "",
+    inventoryId: inventory?.id ?? "",
+    brandId: vehicle.model.brandId,
+    modelId: vehicle.modelId,
+    variantName: variant?.name ?? "",
+    sku: variant?.sku ?? "",
+    slug: vehicle.slug,
+    year: vehicle.year,
+    bodyType: vehicle.bodyType,
+    segment: vehicle.segment,
+    fuelType: vehicle.fuelType,
+    seats: vehicle.seats,
+    description: vehicle.description,
+    exterior: vehicle.exterior,
+    interior: vehicle.interior,
+    technology: vehicle.technology,
+    safety: vehicle.safety,
+    price: Number(variant?.price ?? 0),
+    specifications: (vehicle.specifications &&
+    typeof vehicle.specifications === "object" &&
+    !Array.isArray(vehicle.specifications)
+      ? vehicle.specifications
+      : {}) as Record<string, string>,
+    overviewTitle: vehicle.overviewTitle ?? "",
+    overviewQuote: vehicle.overviewQuote ?? "",
+    brochureUrl: vehicle.brochureUrl ?? "",
+    salePrice: variant?.salePrice ? Number(variant.salePrice) : null,
+    engine: variant?.engine ?? "",
+    horsepower: variant?.horsepower ?? 0,
+    torque: variant?.torque ?? 0,
+    acceleration: Number(variant?.acceleration ?? 0),
+    transmission: variant?.transmission ?? "",
+    drivetrain: variant?.drivetrain ?? "",
+    dimensions: variant?.dimensions ?? "",
+    showroomId: inventory?.showroomId ?? "",
+    color: inventory?.color ?? "",
+    quantity: inventory?.quantity ?? 0,
+    inventoryStatus: inventory?.status ?? "AVAILABLE",
+    coverImage:
+      gallery.find((image) => image.kind === "COVER")?.url ??
+      gallery[0]?.url ??
+      "",
+    galleryImages: gallery
+      .filter((image) => image.kind !== "COVER")
+      .map((image) => image.url)
+      .join("\n"),
+    exteriorImage: contentImage("CONTENT_EXTERIOR"),
+    interiorImage: contentImage("CONTENT_INTERIOR"),
+    technologyImage: contentImage("CONTENT_TECHNOLOGY"),
+    safetyImage: contentImage("CONTENT_SAFETY"),
+    seoTitle: vehicle.seoTitle ?? "",
+    seoDescription: vehicle.seoDescription ?? "",
+    status: vehicle.status,
   };
-  return <div className="admin-page"><div className="admin-title"><div><p className="admin-breadcrumb"><Link href="/admin/cars">Quản lý xe</Link> / Chỉnh sửa</p><h1>Chỉnh sửa {vehicle.model.name}</h1></div></div><VehicleForm brands={brands} showrooms={showrooms} vehicle={value} error={error} /></div>;
+  return (
+    <div className="admin-page">
+      <div className="admin-title">
+        <div>
+          <p className="admin-breadcrumb">
+            <Link href="/admin/cars">Quản lý xe</Link> / Chỉnh sửa
+          </p>
+          <h1>Chỉnh sửa {vehicle.model.name}</h1>
+        </div>
+      </div>
+      <VehicleForm
+        brands={brands}
+        showrooms={showrooms}
+        vehicle={value}
+        error={error}
+      />
+    </div>
+  );
 }

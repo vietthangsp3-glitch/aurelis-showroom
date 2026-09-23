@@ -13,6 +13,7 @@ const links = [
   ["Ưu đãi", "/promotions"],
   ["Tài chính", "/finance"],
   ["So sánh", "/compare"],
+  ["Lái thử", "/test-drive"],
   ["Showroom", "/showroom"],
 ] as const;
 
@@ -28,7 +29,9 @@ export function PublicHeader() {
     return () => window.removeEventListener("scroll", update);
   }, []);
   return (
-    <header className={`public-header${isHome ? " public-header--home" : ""}${scrolled ? " public-header--scrolled" : ""}${open ? " public-header--open" : ""}`}>
+    <header
+      className={`public-header${isHome ? " public-header--home" : ""}${scrolled ? " public-header--scrolled" : ""}${open ? " public-header--open" : ""}`}
+    >
       <div className="shell public-header__inner">
         <BrandMark />
         <nav className="desktop-nav" aria-label="Điều hướng chính">
@@ -58,7 +61,11 @@ export function PublicHeader() {
         </div>
       </div>
       {open && (
-        <nav id="mobile-navigation" className="mobile-nav" aria-label="Điều hướng di động">
+        <nav
+          id="mobile-navigation"
+          className="mobile-nav"
+          aria-label="Điều hướng di động"
+        >
           {links.map(([label, href]) => (
             <Link key={href} href={href} onClick={() => setOpen(false)}>
               {label}

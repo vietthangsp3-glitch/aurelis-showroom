@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -38,30 +38,47 @@ enum InterestType {
 }
 
 model User {
-  id           String      @id @default(cuid())
-  name         String
-  email        String      @unique
-  passwordHash String
-  role         Role        @default(SALES)
-  active       Boolean     @default(true)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  auditLogs    AuditLog[]
-  articles     Article[]
-  assignedLeads Lead[]     @relation("AssignedLeads")
+  id               String        @id @default(cuid())
+  name             String
+  email            String        @unique
+  passwordHash     String
+  role             Role          @default(SALES)
+  active           Boolean       @default(true)
+  failedLoginCount Int           @default(0)
+  lockedUntil      DateTime?
+  lastLoginAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  auditLogs        AuditLog[]
+  authSessions     AuthSession[]
+  articles         Article[]
+  assignedLeads    Lead[]        @relation("AssignedLeads")
+}
+
+model AuthSession {
+  id         String    @id
+  userId     String
+  expiresAt  DateTime
+  lastSeenAt DateTime  @default(now())
+  revokedAt  DateTime?
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+
+  @@index([userId, expiresAt])
+  @@index([revokedAt, expiresAt])
 }
 
 model Brand {
-  id          String         @id @default(cuid())
-  name        String         @unique
-  slug        String         @unique
-  logoUrl     String?
-  description String?
-  seoTitle    String?
+  id             String         @id @default(cuid())
+  name           String         @unique
+  slug           String         @unique
+  logoUrl        String?
+  description    String?
+  seoTitle       String?
   seoDescription String?
-  models      VehicleModel[]
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  models         VehicleModel[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 model VehicleModel {
@@ -79,34 +96,34 @@ model VehicleModel {
 }
 
 model Vehicle {
-  id          String          @id @default(cuid())
-  modelId     String
-  slug        String          @unique
-  year        Int
-  bodyType    String
-  segment     String
-  fuelType    String
-  seats       Int
-  description String
-  exterior    String
-  interior    String
-  technology  String
-  safety      String
+  id             String             @id @default(cuid())
+  modelId        String
+  slug           String             @unique
+  year           Int
+  bodyType       String
+  segment        String
+  fuelType       String
+  seats          Int
+  description    String
+  exterior       String
+  interior       String
+  technology     String
+  safety         String
   specifications Json?
-  overviewTitle String?
-  overviewQuote String?
-  brochureUrl String?
-  seoTitle    String?
+  overviewTitle  String?
+  overviewQuote  String?
+  brochureUrl    String?
+  seoTitle       String?
   seoDescription String?
-  status      PublishStatus   @default(DRAFT)
-  publishedAt DateTime?
-  model       VehicleModel    @relation(fields: [modelId], references: [id], onDelete: Restrict)
-  variants    VehicleVariant[]
-  images      VehicleImage[]
-  categories  VehicleCategory[]
-  promotions  PromotionVehicle[]
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  status         PublishStatus      @default(DRAFT)
+  publishedAt    DateTime?
+  model          VehicleModel       @relation(fields: [modelId], references: [id], onDelete: Restrict)
+  variants       VehicleVariant[]
+  images         VehicleImage[]
+  categories     VehicleCategory[]
+  promotions     PromotionVehicle[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
 
   @@index([modelId, status, publishedAt])
   @@index([bodyType, fuelType, seats])
@@ -137,15 +154,15 @@ model VehicleVariant {
 }
 
 model VehicleImage {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   vehicleId String
   mediaId   String?
   url       String
   alt       String
-  kind      String   @default("GALLERY")
-  position  Int      @default(0)
-  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  media     Media?   @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+  kind      String  @default("GALLERY")
+  position  Int     @default(0)
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  media     Media?  @relation(fields: [mediaId], references: [id], onDelete: SetNull)
 
   @@index([vehicleId, position])
 }
@@ -168,19 +185,19 @@ model VehicleCategory {
 }
 
 model Showroom {
-  id          String             @id @default(cuid())
-  name        String
-  slug        String             @unique
-  address     String
-  city        String
-  phone       String
+  id           String             @id @default(cuid())
+  name         String
+  slug         String             @unique
+  address      String
+  city         String
+  phone        String
   openingHours String
-  latitude    Decimal?           @db.Decimal(10, 7)
-  longitude   Decimal?           @db.Decimal(10, 7)
-  inventory   VehicleInventory[]
-  testDrives  TestDriveBooking[]
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  latitude     Decimal?           @db.Decimal(10, 7)
+  longitude    Decimal?           @db.Decimal(10, 7)
+  inventory    VehicleInventory[]
+  testDrives   TestDriveBooking[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 }
 
 model VehicleInventory {
@@ -199,7 +216,7 @@ model VehicleInventory {
 }
 
 model Lead {
-  id                   String         @id @default(cuid())
+  id                   String            @id @default(cuid())
   name                 String
   phone                String
   email                String?
@@ -214,16 +231,16 @@ model Lead {
   utmCampaign          String?
   landingPage          String?
   referrer             String?
-  status               LeadStatus     @default(NEW)
+  status               LeadStatus        @default(NEW)
   fingerprint          String
-  submissionKey        String          @unique
+  submissionKey        String            @unique
   assignedToId         String?
-  variant              VehicleVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
-  assignedTo           User?           @relation("AssignedLeads", fields: [assignedToId], references: [id], onDelete: SetNull)
+  variant              VehicleVariant?   @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  assignedTo           User?             @relation("AssignedLeads", fields: [assignedToId], references: [id], onDelete: SetNull)
   activities           LeadActivity[]
   testDrive            TestDriveBooking?
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @updatedAt
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
 
   @@index([phone, createdAt])
   @@index([fingerprint, createdAt])
@@ -244,17 +261,17 @@ model LeadActivity {
 }
 
 model TestDriveBooking {
-  id         String         @id @default(cuid())
-  leadId     String         @unique
-  variantId  String
-  showroomId String
+  id          String         @id @default(cuid())
+  leadId      String         @unique
+  variantId   String
+  showroomId  String
   scheduledAt DateTime
-  status     String         @default("PENDING")
-  lead       Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  variant    VehicleVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
-  showroom   Showroom       @relation(fields: [showroomId], references: [id], onDelete: Restrict)
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  status      String         @default("PENDING")
+  lead        Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  variant     VehicleVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  showroom    Showroom       @relation(fields: [showroomId], references: [id], onDelete: Restrict)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 }
 
 model Promotion {

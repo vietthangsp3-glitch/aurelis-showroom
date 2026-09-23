@@ -2,7 +2,10 @@
 
 import { useActionState, useEffect, useId, useRef, useState } from "react";
 import { X } from "lucide-react";
-import { createLead, type LeadActionState } from "@/features/leads/actions/create-lead";
+import {
+  createLead,
+  type LeadActionState,
+} from "@/features/leads/actions/create-lead";
 import { Button } from "@/components/ui/button";
 import type { Vehicle } from "@/types/vehicle";
 
@@ -26,7 +29,8 @@ export function LeadDialog({
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
-    const closeButton = dialogRef.current?.querySelector<HTMLButtonElement>("button");
+    const closeButton =
+      dialogRef.current?.querySelector<HTMLButtonElement>("button");
     closeButton?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
@@ -49,7 +53,11 @@ export function LeadDialog({
         {label} <span aria-hidden="true">→</span>
       </Button>
       {open && (
-        <div className="dialog-backdrop" role="presentation" onMouseDown={() => setOpen(false)}>
+        <div
+          className="dialog-backdrop"
+          role="presentation"
+          onMouseDown={() => setOpen(false)}
+        >
           <div
             ref={dialogRef}
             className="lead-dialog"
@@ -61,7 +69,10 @@ export function LeadDialog({
             <div className="lead-dialog__story">
               <p className="eyebrow">Tư vấn riêng cho bạn</p>
               <h2 id={titleId}>Nhận báo giá & tư vấn nhanh</h2>
-              <p>Đội ngũ AURELIA sẽ chuẩn bị phương án phù hợp và liên hệ vào thời gian bạn chọn.</p>
+              <p>
+                Đội ngũ AURELIA sẽ chuẩn bị phương án phù hợp và liên hệ vào
+                thời gian bạn chọn.
+              </p>
               <div className="lead-dialog__trust">
                 <span>Phản hồi trong 24 giờ</span>
                 <span>Báo giá minh bạch</span>
@@ -69,34 +80,68 @@ export function LeadDialog({
               </div>
             </div>
             <form action={action} className="lead-form">
-              <button className="dialog-close" type="button" onClick={() => setOpen(false)} aria-label="Đóng">
+              <button
+                className="dialog-close"
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Đóng"
+              >
                 <X size={20} />
               </button>
               <input type="hidden" name="carId" value={vehicle?.id ?? ""} />
               <input type="hidden" name="brand" value={vehicle?.brand ?? ""} />
               <input type="hidden" name="source" value="website" />
               <input type="hidden" name="submissionKey" value={submissionKey} />
-              <input type="hidden" name="landingPage" value={typeof window === "undefined" ? "" : window.location.href} />
+              <input
+                type="hidden"
+                name="landingPage"
+                value={
+                  typeof window === "undefined" ? "" : window.location.href
+                }
+              />
               <label>
                 Họ và tên *
-                <input name="name" placeholder="Nhập họ và tên của bạn" autoComplete="name" required />
-                {state.fieldErrors?.name?.[0] && <small className="field-error">{state.fieldErrors.name[0]}</small>}
+                <input
+                  name="name"
+                  placeholder="Nhập họ và tên của bạn"
+                  autoComplete="name"
+                  required
+                />
+                {state.fieldErrors?.name?.[0] && (
+                  <small className="field-error">
+                    {state.fieldErrors.name[0]}
+                  </small>
+                )}
               </label>
               <label>
                 Số điện thoại *
-                <input name="phone" placeholder="09xx xxx xxx" inputMode="tel" autoComplete="tel" required />
-                {state.fieldErrors?.phone?.[0] && <small className="field-error">{state.fieldErrors.phone[0]}</small>}
+                <input
+                  name="phone"
+                  placeholder="09xx xxx xxx"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  required
+                />
+                {state.fieldErrors?.phone?.[0] && (
+                  <small className="field-error">
+                    {state.fieldErrors.phone[0]}
+                  </small>
+                )}
               </label>
               <label>
                 Email
-                <input name="email" type="email" placeholder="you@example.com" autoComplete="email" />
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                />
               </label>
               <div className="form-grid">
                 <label>
                   Nhu cầu *
                   <select name="interestType" defaultValue="QUOTE">
                     <option value="QUOTE">Nhận báo giá</option>
-                    <option value="TEST_DRIVE">Đăng ký lái thử</option>
                     <option value="FINANCE">Tư vấn trả góp</option>
                     <option value="CAR_SELECTION">Tư vấn chọn xe</option>
                     <option value="PROMOTION">Nhận ưu đãi</option>
@@ -114,7 +159,11 @@ export function LeadDialog({
               </div>
               <label>
                 Ghi chú
-                <textarea name="note" rows={3} placeholder="Điều bạn muốn chuyên viên chuẩn bị trước..." />
+                <textarea
+                  name="note"
+                  rows={3}
+                  placeholder="Điều bạn muốn chuyên viên chuẩn bị trước..."
+                />
               </label>
               <label className="honeypot" aria-hidden="true">
                 Website
@@ -122,10 +171,16 @@ export function LeadDialog({
               </label>
               <label className="consent">
                 <input type="checkbox" name="consent" required />
-                <span>Tôi đồng ý để AURELIA liên hệ và xử lý thông tin theo chính sách bảo mật.</span>
+                <span>
+                  Tôi đồng ý để AURELIA liên hệ và xử lý thông tin theo chính
+                  sách bảo mật.
+                </span>
               </label>
               {state.message && (
-                <p className={state.ok ? "form-success" : "form-error"} role="status">
+                <p
+                  className={state.ok ? "form-success" : "form-error"}
+                  role="status"
+                >
                   {state.message}
                 </p>
               )}

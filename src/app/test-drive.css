@@ -1,0 +1,57 @@
+.test-drive-page {
+  min-height: 100vh;
+  padding: 8rem 0 6rem;
+  background: #f5f2eb;
+  color: #171717;
+}
+
+.test-drive-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+  gap: 4rem;
+  align-items: end;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(23, 23, 23, 0.14);
+}
+
+.test-drive-hero h1 {
+  margin: 0.6rem 0 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.95;
+}
+
+.test-drive-hero p {
+  max-width: 720px;
+}
+.test-drive-trust {
+  display: grid;
+  gap: 0.8rem;
+  font-size: 0.9rem;
+  color: rgba(23, 23, 23, 0.68);
+}
+
+.test-drive-trust span {
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(23, 23, 23, 0.12);
+}
+
+.test-drive-content {
+  padding-top: 3rem;
+}
+
+.test-drive-form {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+@media (max-width: 800px) {
+  .test-drive-page {
+    padding-top: 6rem;
+  }
+
+  .test-drive-hero {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

@@ -3,7 +3,10 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { createLead, type LeadActionState } from "@/features/leads/actions/create-lead";
+import {
+  createLead,
+  type LeadActionState,
+} from "@/features/leads/actions/create-lead";
 
 const initialState: LeadActionState = { ok: false, message: "" };
 
@@ -42,24 +45,45 @@ export function LeadInlineForm() {
       <div className="lead-inline-form__fields">
         <label>
           <span>Tên khách hàng *</span>
-          <input name="name" placeholder="Nguyễn Văn An" autoComplete="name" required />
-          {state.fieldErrors?.name?.[0] && <small className="field-error">{state.fieldErrors.name[0]}</small>}
+          <input
+            name="name"
+            placeholder="Nguyễn Văn An"
+            autoComplete="name"
+            required
+          />
+          {state.fieldErrors?.name?.[0] && (
+            <small className="field-error">{state.fieldErrors.name[0]}</small>
+          )}
         </label>
         <label>
           <span>Số điện thoại *</span>
-          <input name="phone" placeholder="09xx xxx xxx" inputMode="tel" autoComplete="tel" required />
-          {state.fieldErrors?.phone?.[0] && <small className="field-error">{state.fieldErrors.phone[0]}</small>}
+          <input
+            name="phone"
+            placeholder="09xx xxx xxx"
+            inputMode="tel"
+            autoComplete="tel"
+            required
+          />
+          {state.fieldErrors?.phone?.[0] && (
+            <small className="field-error">{state.fieldErrors.phone[0]}</small>
+          )}
         </label>
         <label className="lead-inline-form__email">
           <span>Email</span>
-          <input name="email" type="email" placeholder="you@example.com" autoComplete="email" />
-          {state.fieldErrors?.email?.[0] && <small className="field-error">{state.fieldErrors.email[0]}</small>}
+          <input
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            autoComplete="email"
+          />
+          {state.fieldErrors?.email?.[0] && (
+            <small className="field-error">{state.fieldErrors.email[0]}</small>
+          )}
         </label>
         <label>
           <span>Nhu cầu *</span>
           <select name="interestType" defaultValue="QUOTE">
             <option value="QUOTE">Nhận báo giá</option>
-            <option value="TEST_DRIVE">Đăng ký lái thử</option>
             <option value="FINANCE">Tư vấn trả góp</option>
             <option value="CAR_SELECTION">Tư vấn chọn xe</option>
             <option value="PROMOTION">Nhận ưu đãi</option>
@@ -76,7 +100,11 @@ export function LeadInlineForm() {
         </label>
         <label className="lead-inline-form__note">
           <span>Ghi chú</span>
-          <textarea name="note" rows={3} placeholder="Mẫu xe, ngân sách hoặc điều bạn cần tư vấn..." />
+          <textarea
+            name="note"
+            rows={3}
+            placeholder="Mẫu xe, ngân sách hoặc điều bạn cần tư vấn..."
+          />
         </label>
       </div>
 
@@ -92,7 +120,8 @@ export function LeadInlineForm() {
       )}
 
       <Button type="submit" size="lg" disabled={pending}>
-        {pending ? "Đang gửi..." : "Nhận báo giá"} {!pending && <ArrowRight size={17} aria-hidden="true" />}
+        {pending ? "Đang gửi..." : "Nhận báo giá"}{" "}
+        {!pending && <ArrowRight size={17} aria-hidden="true" />}
       </Button>
     </form>
   );
