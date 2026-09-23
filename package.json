@@ -16,7 +16,7 @@
     "prepare": "husky || echo Husky skipped because this folder is not a Git checkout"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.10.0",
+    "@hookform/resolvers": "^5.9.1",
     "@prisma/client": "^6.19.3",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
