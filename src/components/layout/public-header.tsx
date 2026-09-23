@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { Menu, Search, X } from "lucide-react";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/shared/brand-mark";
 import { LeadDialog } from "@/features/leads/components/lead-dialog";
 
@@ -17,8 +18,17 @@ const links = [
 
 export function PublicHeader() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 24);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
   return (
-    <header className="public-header">
+    <header className={`public-header${isHome ? " public-header--home" : ""}${scrolled ? " public-header--scrolled" : ""}${open ? " public-header--open" : ""}`}>
       <div className="shell public-header__inner">
         <BrandMark />
         <nav className="desktop-nav" aria-label="Điều hướng chính">

@@ -4,6 +4,7 @@ import { compare } from "bcryptjs";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSession, destroySession } from "@/lib/auth/session";
+import { prisma } from "@/lib/database/prisma";
 
 export interface LoginState { error?: string }
 
@@ -20,7 +21,9 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   if (!expectedEmail || !hash) return { error: "Tài khoản quản trị chưa được cấu hình." };
   const valid = parsed.data.email.toLowerCase() === expectedEmail.toLowerCase() && (await compare(parsed.data.password, hash));
   if (!valid) return { error: "Email hoặc mật khẩu không chính xác." };
-  await createSession({ userId: "env-admin", name: "Nguyễn Văn A", email: expectedEmail, role: "ADMIN" });
+  const user = await prisma.user.findUnique({ where: { email: expectedEmail } });
+  if (!user || !user.active) return { error: "Tài khoản quản trị chưa được khởi tạo trong database." };
+  await createSession({ userId: user.id, name: user.name, email: user.email, role: user.role });
   redirect("/admin/dashboard");
 }
 

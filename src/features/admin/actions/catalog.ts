@@ -98,8 +98,14 @@ export async function deleteModelAction(modelId: string) {
 function vehicleData(formData: FormData) {
   const status = text(formData, "status") === "PUBLISHED" ? "PUBLISHED" as const : "DRAFT" as const;
   const coverImage = text(formData, "coverImage");
-  const images = [coverImage, ...text(formData, "galleryImages").split(/\r?\n/).map((url) => url.trim())]
+  const galleryImages = [coverImage, ...text(formData, "galleryImages").split(/\r?\n/).map((url) => url.trim())]
     .filter((url, index, all) => url && all.indexOf(url) === index);
+  const contentImages = [
+    ["CONTENT_EXTERIOR", text(formData, "exteriorImage")],
+    ["CONTENT_INTERIOR", text(formData, "interiorImage")],
+    ["CONTENT_TECHNOLOGY", text(formData, "technologyImage")],
+    ["CONTENT_SAFETY", text(formData, "safetyImage")],
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
   return {
     modelId: text(formData, "modelId"),
     slug: slugify(text(formData, "slug")),
@@ -136,14 +142,18 @@ function vehicleData(formData: FormData) {
       quantity: Math.max(0, number(formData, "quantity")),
       status: text(formData, "inventoryStatus") || "AVAILABLE",
     },
-    images,
+    images: [
+      ...galleryImages.map((url, position) => ({ url, kind: position === 0 ? "COVER" : "GALLERY" })),
+      ...contentImages.map(([kind, url]) => ({ url, kind })),
+    ],
+    galleryImages,
   };
 }
 
 function validateVehicle(input: ReturnType<typeof vehicleData>) {
   if (!input.modelId || !input.slug || !input.bodyType || !input.segment || !input.fuelType) return "Vui lòng điền đủ thông tin cơ bản.";
   if (!input.variant.name || !input.variant.sku || input.variant.price <= 0) return "Phiên bản, SKU và giá niêm yết là bắt buộc.";
-  if (!input.images.length) return "Cần ít nhất một URL ảnh đại diện.";
+  if (!input.galleryImages.length) return "Cần ít nhất một URL ảnh đại diện.";
   return null;
 }
 
@@ -161,7 +171,7 @@ export async function createVehicleAction(formData: FormData) {
         description: input.description, exterior: input.exterior, interior: input.interior,
         technology: input.technology, safety: input.safety, seoTitle: input.seoTitle,
         seoDescription: input.seoDescription, status: input.status, publishedAt: input.publishedAt,
-        images: { create: input.images.map((url, position) => ({ url, alt: `${input.variant.name} - ảnh ${position + 1}`, kind: position === 0 ? "COVER" : "GALLERY", position })) },
+        images: { create: input.images.map((image, position) => ({ url: image.url, alt: `${input.variant.name} - ảnh ${position + 1}`, kind: image.kind, position })) },
         variants: { create: { ...input.variant, inventory: input.inventory.showroomId ? { create: input.inventory } : undefined } },
       },
     });
@@ -196,7 +206,7 @@ export async function updateVehicleAction(vehicleId: string, formData: FormData)
         ? await tx.vehicleVariant.update({ where: { id: existing.variants[0].id }, data: input.variant })
         : await tx.vehicleVariant.create({ data: { vehicleId, ...input.variant } });
       await tx.vehicleImage.deleteMany({ where: { vehicleId } });
-      await tx.vehicleImage.createMany({ data: input.images.map((url, position) => ({ vehicleId, url, alt: `${input.variant.name} - ảnh ${position + 1}`, kind: position === 0 ? "COVER" : "GALLERY", position })) });
+      await tx.vehicleImage.createMany({ data: input.images.map((image, position) => ({ vehicleId, url: image.url, alt: `${input.variant.name} - ảnh ${position + 1}`, kind: image.kind, position })) });
       await tx.vehicleInventory.deleteMany({ where: { variantId: variant.id } });
       if (input.inventory.showroomId) await tx.vehicleInventory.create({ data: { variantId: variant.id, ...input.inventory } });
     });

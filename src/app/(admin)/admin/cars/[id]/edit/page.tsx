@@ -16,6 +16,8 @@ export default async function EditCarPage({ params, searchParams }: { params: Pr
   if (!vehicle) notFound();
   const variant = vehicle.variants[0];
   const inventory = variant?.inventory[0];
+  const gallery = vehicle.images.filter((image) => image.kind === "COVER" || image.kind === "GALLERY");
+  const contentImage = (kind: string) => vehicle.images.find((image) => image.kind === kind)?.url ?? "";
   const value: VehicleFormValue = {
     id: vehicle.id, brandId: vehicle.model.brandId, modelId: vehicle.modelId,
     variantName: variant?.name ?? "", sku: variant?.sku ?? "", slug: vehicle.slug,
@@ -27,8 +29,10 @@ export default async function EditCarPage({ params, searchParams }: { params: Pr
     acceleration: Number(variant?.acceleration ?? 0), transmission: variant?.transmission ?? "",
     drivetrain: variant?.drivetrain ?? "", dimensions: variant?.dimensions ?? "",
     showroomId: inventory?.showroomId ?? "", color: inventory?.color ?? "", quantity: inventory?.quantity ?? 0,
-    inventoryStatus: inventory?.status ?? "AVAILABLE", coverImage: vehicle.images[0]?.url ?? "",
-    galleryImages: vehicle.images.slice(1).map((image) => image.url).join("\n"),
+    inventoryStatus: inventory?.status ?? "AVAILABLE", coverImage: gallery.find((image) => image.kind === "COVER")?.url ?? gallery[0]?.url ?? "",
+    galleryImages: gallery.filter((image) => image.kind !== "COVER").map((image) => image.url).join("\n"),
+    exteriorImage: contentImage("CONTENT_EXTERIOR"), interiorImage: contentImage("CONTENT_INTERIOR"),
+    technologyImage: contentImage("CONTENT_TECHNOLOGY"), safetyImage: contentImage("CONTENT_SAFETY"),
     seoTitle: vehicle.seoTitle ?? "", seoDescription: vehicle.seoDescription ?? "", status: vehicle.status,
   };
   return <div className="admin-page"><div className="admin-title"><div><p className="admin-breadcrumb"><Link href="/admin/cars">Quản lý xe</Link> / Chỉnh sửa</p><h1>Chỉnh sửa {vehicle.model.name}</h1></div></div><VehicleForm brands={brands} showrooms={showrooms} vehicle={value} error={error} /></div>;

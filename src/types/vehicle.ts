@@ -39,4 +39,10 @@ export interface Vehicle {
   safety: string;
   image: string;
   gallery: string[];
+  contentImages?: {
+    exterior?: string;
+    interior?: string;
+    technology?: string;
+    safety?: string;
+  };
 }

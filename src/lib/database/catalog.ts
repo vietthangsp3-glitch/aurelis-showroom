@@ -44,7 +44,7 @@ export async function getCatalogVehicles(): Promise<Vehicle[]> {
 
     return records.map((record) => {
       const variant = record.variants[0];
-      const gallery = record.images.map((image) => image.url);
+      const gallery = record.images.filter((image) => image.kind === "COVER" || image.kind === "GALLERY").map((image) => image.url);
       const image = gallery[0] ?? fallbackVehicles[0]!.image;
       const normalizedGallery = gallery.length ? [...gallery] : [image];
       while (normalizedGallery.length < 3) normalizedGallery.push(image);
@@ -79,6 +79,12 @@ export async function getCatalogVehicles(): Promise<Vehicle[]> {
         safety: record.safety,
         image,
         gallery: normalizedGallery,
+        contentImages: {
+          exterior: record.images.find((item) => item.kind === "CONTENT_EXTERIOR")?.url,
+          interior: record.images.find((item) => item.kind === "CONTENT_INTERIOR")?.url,
+          technology: record.images.find((item) => item.kind === "CONTENT_TECHNOLOGY")?.url,
+          safety: record.images.find((item) => item.kind === "CONTENT_SAFETY")?.url,
+        },
       } satisfies Vehicle;
     });
   } catch (error) {
