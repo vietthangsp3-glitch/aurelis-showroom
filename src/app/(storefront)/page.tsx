@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BadgePercent, ShieldCheck, Sparkles } from "lucide-react";
 import { BrandMarquee } from "@/components/home/brand-marquee";
+import { CategoryScrollGallery } from "@/components/home/category-scroll-gallery";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
 import { LeadDialog } from "@/features/leads/components/lead-dialog";
 import { LeadInlineForm } from "@/features/leads/components/lead-inline-form";
@@ -14,7 +15,7 @@ const categories = [
   ["MPV", "Không gian cho cả gia đình"],
   ["Electric", "Tương lai vận hành xanh"],
   ["Luxury", "Trải nghiệm đỉnh cao"],
-];
+] as const;
 
 export default async function HomePage() {
   const [vehicles, brands] = await Promise.all([getCatalogVehicles(), getCatalogBrands()]);
@@ -81,22 +82,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section section--light">
-        <div className="shell">
-          <div className="section-heading section-heading--dark">
-            <div><p className="eyebrow">Danh mục xe</p><h2>Khám phá theo phong cách sống.</h2></div>
-            <Link href="/cars">Xem tất cả danh mục <ArrowRight size={16} /></Link>
-          </div>
-          <div className="category-grid">
-            {categories.map(([name, description], index) => (
-              <Link href={`/cars?body=${name}`} key={name} className="category-card">
-                <Image src={vehicles[index]?.image ?? vehicles[0]!.image} alt="" fill sizes="(max-width: 760px) 50vw, 16vw" />
-                <span><strong>{name === "Electric" ? "Xe điện" : name === "Luxury" ? "Hạng sang" : name}</strong><small>{description}</small></span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      <CategoryScrollGallery items={categories.map(([name, description], index) => ({ name, description, image: vehicles[index]?.image ?? vehicles[0]!.image }))} />
 
       <section className="experience">
         <div className="shell experience__grid">
