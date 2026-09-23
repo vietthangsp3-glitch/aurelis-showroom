@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Landmark, Percent, ShieldCheck } from "lucide-react";
-import { vehicles } from "@/data/vehicles";
+import { getCatalogVehicles } from "@/lib/database/catalog";
 import { FinanceCalculator } from "@/features/finance/components/finance-calculator";
 import { LeadDialog } from "@/features/leads/components/lead-dialog";
 
 export const metadata: Metadata = { title: "Tài chính", description: "Ước tính khoản vay mua xe và nhận phương án tài chính cá nhân hóa." };
 
-export default function FinancePage() {
+export default async function FinancePage() {
+  const vehicles = await getCatalogVehicles();
   return (
     <>
       <section className="finance-hero"><Image src={vehicles[2]!.image} alt="" fill priority sizes="100vw" /><div className="page-hero__veil" /><div className="shell page-hero__content"><p className="eyebrow">Tài chính linh hoạt</p><h1>Giải pháp tài chính<br />cho chiếc xe bạn mơ ước.</h1><p>Sở hữu xe sang dễ dàng hơn với các gói vay linh hoạt và tư vấn minh bạch.</p><div><LeadDialog label="Nhận tư vấn ngay" /><a href="#calculator" className="button button--outline">Xem ước tính</a></div></div></section>

@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Filter, Search, SlidersHorizontal, X } from "lucide-react";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
-import { brands } from "@/data/vehicles";
 import { filterVehicles } from "@/features/vehicles/filter-vehicles";
+import type { CatalogBrand } from "@/lib/database/catalog";
 import type { Vehicle } from "@/types/vehicle";
 
-export function CarsExplorer({ vehicles }: { vehicles: Vehicle[] }) {
+export function CarsExplorer({ vehicles, brands }: { vehicles: Vehicle[]; brands: CatalogBrand[] }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();

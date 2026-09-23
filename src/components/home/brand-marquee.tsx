@@ -1,6 +1,6 @@
-import { brands } from "@/data/vehicles";
+import type { CatalogBrand } from "@/lib/database/catalog";
 
-export function BrandMarquee() {
+export function BrandMarquee({ brands }: { brands: CatalogBrand[] }) {
   return (
     <section className="brand-marquee" aria-label="Các thương hiệu được phân phối">
       <div className="brand-marquee__track">

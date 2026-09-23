@@ -5,7 +5,7 @@ import { BrandMarquee } from "@/components/home/brand-marquee";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
 import { LeadDialog } from "@/features/leads/components/lead-dialog";
 import { LeadInlineForm } from "@/features/leads/components/lead-inline-form";
-import { brands, vehicles } from "@/data/vehicles";
+import { getCatalogBrands, getCatalogVehicles } from "@/lib/database/catalog";
 
 const categories = [
   ["SUV", "Mạnh mẽ cho mọi hành trình"],
@@ -16,7 +16,8 @@ const categories = [
   ["Luxury", "Trải nghiệm đỉnh cao"],
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [vehicles, brands] = await Promise.all([getCatalogVehicles(), getCatalogBrands()]);
   const featured = vehicles.filter((vehicle) =>
     ["mercedes-benz", "bmw", "lexus", "vinfast"].includes(vehicle.brandSlug),
   ).slice(0, 4);
@@ -51,7 +52,7 @@ export default function HomePage() {
         <a href="#featured" className="hero__scroll">Cuộn xuống để khám phá ↓</a>
       </section>
 
-      <BrandMarquee />
+      <BrandMarquee brands={brands} />
 
       <section className="section section--dark" id="featured">
         <div className="shell">

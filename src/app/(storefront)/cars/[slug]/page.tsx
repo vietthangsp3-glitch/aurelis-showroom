@@ -3,17 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Gauge, Settings2, Users, Zap } from "lucide-react";
-import { getVehicleBySlug, vehicles } from "@/data/vehicles";
+import { getCatalogVehicleBySlug, getCatalogVehicles } from "@/lib/database/catalog";
 import { formatCurrency } from "@/lib/utils";
 import { LeadDialog } from "@/features/leads/components/lead-dialog";
 import { VehicleGallery } from "@/features/vehicles/components/vehicle-gallery";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
 
-export function generateStaticParams() { return vehicles.map(({ slug }) => ({ slug })); }
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const vehicle = getVehicleBySlug(slug);
+  const vehicle = await getCatalogVehicleBySlug(slug);
   if (!vehicle) return {};
   return {
     title: `${vehicle.brand} ${vehicle.model}`,
@@ -24,8 +22,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function VehicleDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const vehicle = getVehicleBySlug(slug);
+  const vehicle = await getCatalogVehicleBySlug(slug);
   if (!vehicle) notFound();
+  const vehicles = await getCatalogVehicles();
   const related = vehicles.filter((item) => item.brand === vehicle.brand && item.id !== vehicle.id).slice(0, 4);
   const productJsonLd = {
     "@context": "https://schema.org",
