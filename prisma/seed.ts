@@ -4,20 +4,23 @@ import { brands, vehicles } from "../src/data/vehicles";
 const prisma = new PrismaClient();
 
 async function main() {
-  const passwordHash = process.env.ADMIN_SEED_PASSWORD_HASH;
-  if (!passwordHash) {
+  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  const passwordHash =
+    process.env.ADMIN_SEED_PASSWORD_HASH || process.env.ADMIN_PASSWORD_HASH;
+  if (!adminEmail || !passwordHash) {
     throw new Error(
-      "ADMIN_SEED_PASSWORD_HASH là bắt buộc để seed tài khoản quản trị.",
+      "ADMIN_EMAIL và ADMIN_SEED_PASSWORD_HASH là bắt buộc để seed tài khoản quản trị.",
     );
   }
   const admin = await prisma.user.upsert({
-    where: { email: "admin@aurelia.vn" },
-    update: { passwordHash },
+    where: { email: adminEmail },
+    update: { passwordHash, active: true },
     create: {
       name: "Quản trị AURELIA",
-      email: "admin@aurelia.vn",
+      email: adminEmail,
       passwordHash,
       role: "ADMIN",
+      active: true,
     },
   });
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import {
   createLead,
@@ -29,6 +30,8 @@ export function LeadDialog({
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const closeButton =
       dialogRef.current?.querySelector<HTMLButtonElement>("button");
     closeButton?.focus();
@@ -38,6 +41,7 @@ export function LeadDialog({
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
       previous?.focus();
     };
   }, [open]);
@@ -52,7 +56,9 @@ export function LeadDialog({
       <Button variant={variant} onClick={openDialog}>
         {label} <span aria-hidden="true">→</span>
       </Button>
-      {open && (
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
         <div
           className="dialog-backdrop"
           role="presentation"
@@ -189,7 +195,8 @@ export function LeadDialog({
               </Button>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
